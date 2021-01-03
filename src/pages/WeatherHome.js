@@ -5,6 +5,7 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  Image,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import axios from 'axios';
@@ -13,16 +14,7 @@ const city_api_url = 'https://www.metaweather.com/api/location/search/?query=';
 const city_weather_details_api_url =
   'https://www.metaweather.com/api/location/';
 
-/**
- [
-  {
-    "title": "Istanbul",
-    "location_type": "City",
-    "woeid": 2344116,
-    "latt_long": "41.040852,28.986179"
-  }
-]
- */
+const icon_url = 'https://www.metaweather.com//static/img/weather/png/';
 
 function WeatherHome() {
   const [city, setCity] = useState('');
@@ -58,9 +50,45 @@ function WeatherHome() {
           <Icon name="magnify" color={'white'} size={24} />
         </TouchableOpacity>
       </View>
-      {cityWeatherDetails ? (
+      {Object.keys(cityWeatherDetails).length !== 0 ? (
         <View style={styles.weatherCardContainer}>
-          <Text>{cityWeatherDetails.title}</Text>
+          <View style={styles.weatherHeaderContainer}>
+            <View>
+              <Text style={styles.weatherTitle}>
+                {cityWeatherDetails.title}
+              </Text>
+              <View style={styles.weatherIconContainer}>
+                <Image
+                  style={styles.weatherIcon}
+                  source={{
+                    uri:
+                      icon_url +
+                      cityWeatherDetails.consolidated_weather[0]
+                        .weather_state_abbr +
+                      '.png',
+                  }}
+                />
+                <View style={styles.weatherTemp}>
+                  <Text style={styles.weatherTempText}>
+                    {Math.ceil(
+                      cityWeatherDetails.consolidated_weather[0].the_temp,
+                    )}{' '}
+                    ℃
+                  </Text>
+                </View>
+              </View>
+            </View>
+          </View>
+          <View style={styles.weatherEdgeTempContainer}>
+            <Text style={styles.weatherEdgeTemp}>
+              Min:{' '}
+              {Math.ceil(cityWeatherDetails.consolidated_weather[0].min_temp)} ℃
+            </Text>
+            <Text style={styles.weatherEdgeTemp}>
+              Max:{' '}
+              {Math.ceil(cityWeatherDetails.consolidated_weather[0].max_temp)} ℃
+            </Text>
+          </View>
         </View>
       ) : null}
     </View>
@@ -93,6 +121,48 @@ const styles = StyleSheet.create({
   weatherCardContainer: {
     padding: 16,
     marginHorizontal: 8,
+    backgroundColor: 'white',
+    borderRadius: 5,
+  },
+  weatherIcon: {
+    width: 120,
+    height: 120,
+  },
+  weatherHeaderContainer: {
+    alignItems: 'center',
+  },
+  weatherTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 15,
+  },
+  weatherIconContainer: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+  },
+  weatherTemp: {
+    backgroundColor: 'rgba(3, 155, 229, 0.75)',
+    width: 64,
+    height: 64,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 50,
+    position: 'absolute',
+    left: -25,
+  },
+  weatherTempText: {
+    fontSize: 24,
+    color: 'white',
+  },
+  weatherEdgeTempContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 16,
+  },
+  weatherEdgeTemp: {
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });
 
