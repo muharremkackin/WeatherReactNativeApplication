@@ -8,8 +8,12 @@ const Stack = createStackNavigator();
 export default function Routes() {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="WeatherHome" component={WeatherHome} />
+      <Stack.Navigator screenOptions={{headerShown: false}}>
+        <Stack.Screen
+          name="WeatherHome"
+          component={WeatherHome}
+          options={{title: 'Hava durumu'}}
+        />
         <Stack.Screen name="WeatherDetail" component={WeatherDetails} />
       </Stack.Navigator>
     </NavigationContainer>
